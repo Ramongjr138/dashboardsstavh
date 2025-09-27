@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión SST - RM-050-2013-TR</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #0078d4;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --success-color: #107c10;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .microsoft-header {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar {
+            background-color: var(--primary-color);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            padding-top: 20px;
+            width: 250px;
+            overflow-y: auto;
+        }
+        
+        .sidebar a {
+            color: white;
+            padding: 15px 20px;
+            display: block;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            border-left: 4px solid transparent;
+        }
+        
+        .sidebar a:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .sidebar a.active {
+            background-color: var(--secondary-color);
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .top-bar {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 5px;
+        }
+        
+        .card-dashboard {
+            border-radius: 5px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            margin-bottom: 20px;
+            border: none;
+            border-top: 4px solid var(--secondary-color);
+        }
+        
+        .card-dashboard:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .stats-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+        
+        .btn-microsoft {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+        }
+        
+        .btn-microsoft:hover {
+            background-color: #106ebe;
+            color: white;
+        }
+        
+        .alert-sst {
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .progress {
+            height: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .section-title {
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .photo-upload {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            background-color: #fafafa;
+        }
+        
+        .photo-upload:hover {
+            background-color: #f0f0f0;
+            border-color: var(--secondary-color);
+        }
+        
+        .photo-preview {
+            max-width: 100%;
+            max-height: 200px;
+            margin-top: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .custom-table {
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-size: 0.9rem;
+        }
+        
+        .custom-table thead {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .gallery-item {
+            margin-bottom: 15px;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 3px;
+        }
+        
+        .integration-panel {
+            background-color: #f3f2f1;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 10px 0 10px;
+        }
+        
+        .integration-panel h6 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .form-check {
+            margin-bottom: 10px;
+        }
+        
+        .form-check-label {
+            font-size: 0.85rem;
+        }
+        
+        .badge {
+            font-size: 0.75rem;
+        }
+        
+        .bg-warning { 
+            background-color: #ffc107 !important; 
+            color: #000 !important; 
+        }
+        
+        .bg-success { 
+            background-color: #198754 !important; 
+        }
+        
+        .bg-info { 
+            background-color: #0dcaf0 !important; 
+            color: #000 !important; 
+        }
+        
+        .bg-secondary { 
+            background-color: #6c757d !important; 
+        }
+        
+        .text-muted {
+            color: #6c757d !important;
+        }
+        
+        .btn-outline-microsoft {
+            border-color: var(--secondary-color);
+            color: var(--secondary-color);
+        }
+        
+        .btn-outline-microsoft:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding-top: 20px;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 10px;
+            }
+            
+            .sidebar a {
+                float: left;
+                width: 25%;
+                text-align: center;
+                padding: 10px;
+            }
+            
+            .top-bar {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .integration-panel {
+                margin: 10px;
+            }
+            
+            .d-flex.justify-content-between {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .d-flex.justify-content-between button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header estilo Microsoft -->
+    <div class="microsoft-header">
+        <div>
+            <i class="fab fa-microsoft fa-2x me-2"></i>
+            <span class="h4">Sistema de Gestión SST</span>
+        </div>
+        <div>
+            <span class="me-2">Integrado con Microsoft 365</span>
+            <i class="fab fa-microsoft"></i>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="sidebar col-md-2">
+                <div class="text-center mb-4">
+                    <h4>Sistema SST</h4>
+                    <p class="text-muted">RM-050-2013-TR</p>
+                </div>
+                
+                <a href="#" class="active"><i class="fas fa-home me-2"></i> Dashboard</a>
+                <a href="#"><i class="fas fa-clipboard-list me-2"></i> Evaluación de Riesgos</a>
+                <a href="#"><i class="fas fa-file-alt me-2"></i> Informes</a>
+                <a href="#"><i class="fas fa-camera me-2"></i> Evidencia Fotográfica</a>
+                <a href="#"><i class="fas fa-first-aid me-2"></i> Incidentes/Accidentes</a>
+                <a href="#"><i class="fas fa-user-md me-2"></i> Exámenes Médicos</a>
+                <a href="#"><i class="fas fa-chart-line me-2"></i> Indicadores</a>
+                <a href="#"><i class="fas fa-clipboard-check me-2"></i> Plan Anual</a>
+                <a href="#"><i class="fas fa-graduation-cap me-2"></i> Capacitaciones</a>
+                <a href="#"><i class="fas fa-cog me-2"></i> Configuración</a>
+                
+                <!-- Integración Microsoft -->
+                <div class="integration-panel">
+                    <h6><i class="fab fa-microsoft me-2"></i>Integración Microsoft</h6>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="teamsNotification" checked>
+                        <label class="form-check-label small" for="teamsNotification">Notificaciones en Teams</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="onedriveSync" checked>
+                        <label class="form-check-label small" for="onedriveSync">Sincronizar con OneDrive</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="sharepointSync">
+                        <label class="form-check-label small" for="sharepointSync">Sincronizar con SharePoint</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content col-md-10">
+                <!-- Top Bar -->
+                <div class="top-bar">
+                    <h2>Dashboard de Seguridad y Salud en el Trabajo</h2>
+                    <div>
+                        <button class="btn btn-outline-secondary me-2"><i class="fas fa-bell"></i></button>
+                        <button class="btn btn-outline-secondary me-2"><i class="fas fa-question-circle"></i></button>
+                        <span class="me-2">Usuario: No autenticado</span>
+                        <button class="btn btn-microsoft"><i class="fab fa-microsoft me-2"></i>Iniciar con Microsoft</button>
+                    </div>
+                </div>
+
+                <!-- Panel de integración -->
+                <div class="alert alert-info">
+                    <h5><i class="fab fa-microsoft me-2"></i>Ventajas de la integración con Microsoft 365</h5>
+                    <ul class="mb-0">
+                        <li>Autenticación segura con Azure Active Directory</li>
+                        <li>Almacenamiento en OneDrive/SharePoint para fotografías e informes</li>
+                        <li>Notificaciones y recordatorios a través de Microsoft Teams</li>
+                        <li>Sincronización multi-dispositivo</li>
+                    </ul>
+                </div>
+
+                <!-- Estadísticas -->
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card card-dashboard">
+                            <div class="card-body">
+                                <h5 class="card-title">Incidentes Registrados</h5>
+                                <p class="stats-number">13</p>
+                                <p class="card-text"><span class="text-danger"><i class="fas fa-arrow-up"></i> 2%</span> vs mes anterior</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card card-dashboard">
+                            <div class="card-body">
+                                <h5 class="card-title">Inspecciones Realizadas</h5>
+                                <p class="stats-number">45</p>
+                                <p class="card-text"><span class="text-success"><i class="fas fa-arrow-down"></i> 5%</span> vs mes anterior</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card card-dashboard">
+                            <div class="card-body">
+                                <h5 class="card-title">Capacitaciones Realizadas</h5>
+                                <p class="stats-number">8</p>
+                                <p class="card-text"><span class="text-success"><i class="fas fa-arrow-up"></i> 33%</span> vs mes anterior</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card card-dashboard">
+                            <div class="card-body">
+                                <h5 class="card-title">Riesgos Identificados</h5>
+                                <p class="stats-number">27</p>
+                                <p class="card-text"><span class="text-danger"><i class="fas fa-arrow-up"></i> 8%</span> vs mes anterior</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenido principal -->
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <!-- Alertas -->
+                        <div class="card card-dashboard">
+                            <div class="card-body">
+                                <h4 class="section-title"><i class="fas fa-exclamation-triangle me-2"></i>Alertas y Acciones Pendientes</h4>
+                                
+                                <div class="alert alert-warning alert-sst d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5>Inspección de áreas críticas pendiente</h5>
+                                        <p class="mb-0">Vencimiento: 15/06/2024</p>
+                                    </div>
+                                    <button class="btn btn-sm btn-microsoft">Resolver</button>
+                                </div>
+                                
+                                <div class="alert alert-danger alert-sst d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5>Investigación de incidente incompleta</h5>
+                                        <p class="mb-0">Incidente ID: INC-2024-008</p>
+                                    </div>
+                                    <button class="btn btn-sm btn-microsoft">Completar</button>
+                                </div>
+                                
+                                <div class="alert alert-info alert-sst d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5>Capacitación programada para próximo viernes</h5>
+                                        <p class="mb-0">Tema: Manejo seguro de productos químicos</p>
+                                    </div>
+                                    <button class="btn btn-sm btn-microsoft"><i class="fas fa-calendar-plus me-1"></i>Agendar</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Carga de evidencias -->
+                        <div class="card card-dashboard mt-4">
+                            <div class="card-body">
+                                <h4 class="section-title"><i class="fas fa-camera me-2"></i>Carga de Evidencia Fotográfica</h4>
+                                <p class="text-muted">Las imágenes se guardarán en OneDrive/SharePoint</p>
+                                
+                                <div class="photo-upload" id="photoUpload">
+                                    <i class="fas fa-cloud-upload-alt fa-3x mb-3"></i>
+                                    <p>Haga clic o arrastre fotografías para cargar evidencia</p>
+                                    <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+                                    <img id="photoPreview" class="photo-preview">
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <label for="photoDescription" class="form-label">Descripción de la evidencia:</label>
+                                    <textarea class="form-control" id="photoDescription" rows="2" placeholder="Describa lo que muestra la evidencia..."></textarea>
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <label for="photoCategory" class="form-label">Categoría:</label>
+                                    <select class="form-select" id="photoCategory">
+                                        <option selected>Seleccione una categoría</option>
+                                        <option value="inspeccion">Inspección</option>
+                                        <option value="incidente">Incidente/Accidente</option>
+                                        <option value="condicion">Condición subestándar</option>
+                                        <option value="acto">Acto subestándar</option>
+                                        <option value="correctivo">Acción correctiva</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between mt-3">
+                                    <button class="btn btn-microsoft" id="savePhoto"><i class="fas fa-save me-2"></i>Guardar en OneDrive</button>
+                                    <button class="btn btn-outline-secondary"><i class="fas fa-share-alt me-2"></i>Compartir por Teams</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <!-- Indicadores -->
+                        <div class="card card-dashboard">
+                            <div class="card-body">
+                                <h4 class="section-title"><i class="fas fa-chart-bar me-2"></i>Indicadores de Gestión</h4>
+                                
+                                <div class="mb-4">
+                                    <h5>Frecuencia de Incidentes (IF)</h5>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 30%;" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <p>2.5 incidentes por cada millón de horas trabajadas</p>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <h5>Severidad de Incidentes (IS)</h5>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 45%;" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <p>15 días perdidos por cada millón de horas trabajadas</p>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <h5>Cumplimiento del Plan Anual</h5>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-info" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <p>45 de 60 actividades completadas</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Informes -->
+                        <div class="card card-dashboard mt-4">
+                            <div class="card-body">
+                                <h4 class="section-title"><i class="fas fa-file-alt me-2"></i>Generación de Informes</h4>
+                                
+                                <div class="list-group">
+                                    <a href="#" class="list-group-item list-group-item-action">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1">Informe de Incidentes Mensual</h5>
+                                            <small>Hace 3 días</small>
+                                        </div>
+                                        <p class="mb-1">Resumen de todos los incidentes registrados en el mes</p>
+                                        <small><i class="fab fa-microsoft me-1"></i>Guardado en SharePoint</small>
+                                    </a>
+                                    
+                                    <a href="#" class="list-group-item list-group-item-action">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1">Reporte de Inspecciones</h5>
+                                            <small>Hace 1 semana</small>
+                                        </div>
+                                        <p class="mb-1">Resultados de las inspecciones programadas</p>
+                                        <small><i class="fab fa-microsoft me-1"></i>Compartido por Teams</small>
+                                    </a>
+                                    
+                                    <a href="#" class="list-group-item list-group-item-action">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1">Evaluación de Riesgos por Área</h5>
+                                            <small>Hace 2 semanas</small>
+                                        </div>
+                                        <p class="mb-1">Actualización de matriz de riesgos</p>
+                                        <small><i class="fab fa-microsoft me-1"></i>Guardado en OneDrive</small>
+                                    </a>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between mt-3">
+                                    <button class="btn btn-microsoft"><i class="fas fa-plus me-2"></i>Generar Nuevo Informe</button>
+                                    <button class="btn btn-outline-primary"><i class="fab fa-microsoft me-2"></i>Exportar a Excel</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Galería de fotos -->
+                        <div class="card card-dashboard mt-4">
+                            <div class="card-body">
+                                <h4 class="section-title"><i class="fas fa-images me-2"></i>Evidencia Fotográfica Reciente</h4>
+                                <p class="text-muted">Imágenes almacenadas en OneDrive/SharePoint</p>
+                                <div class="row" id="photoGallery">
+                                    <div class="col-12 text-center">
+                                        <p class="text-muted">No hay imágenes guardadas aún</p>
+                                        <button class="btn btn-microsoft"><i class="fab fa-microsoft me-2"></i>Conectar con OneDrive</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tabla de registros -->
+                <div class="card card-dashboard mt-4">
+                    <div class="card-body">
+                        <h4 class="section-title"><i class="fas fa-history me-2"></i>Registros Recientes</h4>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover custom-table">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Tipo</th>
+                                        <th>Descripción</th>
+                                        <th>Área</th>
+                                        <th>Responsable</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>12/06/2024</td>
+                                        <td>Incidente</td>
+                                        <td>Caída a mismo nivel en almacén</td>
+                                        <td>Almacén Principal</td>
+                                        <td>Juan Pérez</td>
+                                        <td><span class="badge bg-warning">En investigación</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-eye"></i></button>
+                                            <button class="btn btn-sm btn-outline-secondary me-1"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-sm btn-outline-microsoft"><i class="fab fa-microsoft"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>10/06/2024</td>
+                                        <td>Inspección</td>
+                                        <td>Inspección programada área de producción</td>
+                                        <td>Línea de Producción B</td>
+                                        <td>María López</td>
+                                        <td><span class="badge bg-success">Completado</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-eye"></i></button>
+                                            <button class="btn btn-sm btn-outline-secondary me-1"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-sm btn-outline-microsoft"><i class="fab fa-microsoft"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>08/06/2024</td>
+                                        <td>Capacitación</td>
+                                        <td>Manejo seguro de productos químicos</td>
+                                        <td>Sala de Capacitaciones</td>
+                                        <td>Roberto Sánchez</td>
+                                        <td><span class="badge bg-success">Completado</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-eye"></i></button>
+                                            <button class="btn btn-sm btn-outline-secondary me-1"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-sm btn-outline-microsoft"><i class="fab fa-microsoft"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Funcionalidad para carga de fotos
+        document.getElementById('photoUpload').addEventListener('click', function() {
+            document.getElementById('fileInput').click();
+        });
+        
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('photoPreview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+        
+        // Drag and drop
+        const photoUpload = document.getElementById('photoUpload');
+        
+        photoUpload.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#0078d4';
+            this.style.backgroundColor = '#f0f8ff';
+        });
+        
+        photoUpload.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#ccc';
+            this.style.backgroundColor = '#fafafa';
+        });
+        
+        photoUpload.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#ccc';
+            this.style.backgroundColor = '#fafafa';
+            
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                document.getElementById('fileInput').files = e.dataTransfer.files;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('photoPreview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(e.dataTransfer.files[0]);
+            }
+        });
+        
+        // Simular guardado
+        document.getElementById('savePhoto').addEventListener('click', function() {
+            const descripcion = document.getElementById('photoDescription').value;
+            const categoria = document.getElementById('photoCategory').value;
+            const archivo = document.getElementById('fileInput').files[0];
+            
+            if (!archivo) {
+                alert('Por favor, seleccione una imagen primero');
+                return;
+            }
+            
+            alert('Evidencia guardada exitosamente (en una implementación real se guardaría en OneDrive)');
+            
+            // Reset form
+            document.getElementById('photoDescription').value = '';
+            document.getElementById('photoCategory').value = '';
+            document.getElementById('photoPreview').style.display = 'none';
+            document.getElementById('fileInput').value = '';
+        });
+        
+        // Simular login Microsoft
+        document.querySelector('.btn-microsoft').addEventListener('click', function() {
+            alert('En una implementación real, esto abriría el flujo de autenticación de Azure Active Directory');
+            document.querySelector('.top-bar span').textContent = 'Usuario: autenticado@empresa.com';
+        });
+    </script>
+</body>
+</html>
